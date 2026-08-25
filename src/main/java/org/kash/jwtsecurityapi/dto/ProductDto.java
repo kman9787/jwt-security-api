@@ -2,6 +2,7 @@ package org.kash.jwtsecurityapi.dto;
 
 import java.math.BigDecimal;
 
-public record ProductDto(String name, BigDecimal price) {
+public record ProductDto(Long id, String name, BigDecimal price) {
 
+    
 }

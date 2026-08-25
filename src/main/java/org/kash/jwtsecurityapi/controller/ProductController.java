@@ -1,13 +1,14 @@
 package org.kash.jwtsecurityapi.controller;
 
+import org.kash.jwtsecurityapi.mapper.ProductMapper;
 import org.kash.jwtsecurityapi.service.ProductService;
+import org.mapstruct.factory.Mappers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -19,6 +20,7 @@ public class ProductController {
     
     @GetMapping
     public ResponseEntity<?> getAllProducts(){
-        return ResponseEntity.ok(productService.getAllProducts());
+        var productMapper = Mappers.getMapper(ProductMapper.class);
+        return ResponseEntity.ok(productMapper.toDtoList(productService.getAllProducts()));
     }
 }

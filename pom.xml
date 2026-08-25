@@ -29,6 +29,7 @@
 	<properties>
 		<java.version>21</java.version>
 		<jjwt.version>0.13.0</jjwt.version>
+		<mapstruct.version>1.6.3</mapstruct.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -74,6 +75,20 @@
 			<version>${jjwt.version}</version>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${mapstruct.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>${mapstruct.version}</version>
+			<scope>compile</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
@@ -115,40 +130,72 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+				<!-- <configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${mapstruct.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration> -->
 				<executions>
 					<execution>
 						<id>default-compile</id>
 						<phase>compile</phase>
 						<goals>
-						<goal>compile</goal>
+							<goal>compile</goal>
 						</goals>
 						<configuration>
-						<annotationProcessorPaths>
-							<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							</path>
-						</annotationProcessorPaths>
+							<annotationProcessorPaths>
+								<path>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok</artifactId>
+								</path>
+								<path>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok-mapstruct-binding</artifactId>
+									<version>0.2.0</version>
+								</path>
+								<path>
+									<groupId>org.mapstruct</groupId>
+									<artifactId>mapstruct-processor</artifactId>
+									<version>${mapstruct.version}</version>
+								</path>
+							</annotationProcessorPaths>
 						</configuration>
 					</execution>
 					<execution>
 						<id>default-testCompile</id>
 						<phase>test-compile</phase>
 						<goals>
-						<goal>testCompile</goal>
+							<goal>testCompile</goal>
 						</goals>
 						<configuration>
-						<annotationProcessorPaths>
-							<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							</path>
-						</annotationProcessorPaths>
+							<annotationProcessorPaths>
+								<path>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok</artifactId>
+								</path>
+								<path>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok-mapstruct-binding</artifactId>
+									<version>0.2.0</version>
+								</path>
+								<path>
+									<groupId>org.mapstruct</groupId>
+									<artifactId>mapstruct-processor</artifactId>
+									<version>${mapstruct.version}</version>
+								</path>
+							</annotationProcessorPaths>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
