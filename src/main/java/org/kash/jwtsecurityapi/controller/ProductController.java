@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductMapper productMapper;
     
     @GetMapping
     public ResponseEntity<?> getAllProducts(){
-        var productMapper = Mappers.getMapper(ProductMapper.class);
         return ResponseEntity.ok(productMapper.toDtoList(productService.getAllProducts()));
     }
 }
