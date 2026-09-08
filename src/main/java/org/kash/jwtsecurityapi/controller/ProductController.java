@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
 @RestController
 @RequestMapping("/api/products")
 @AllArgsConstructor
