@@ -1,6 +1,7 @@
 package org.kash.jwtsecurityapi.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.kash.jwtsecurityapi.model.Product;
 import org.kash.jwtsecurityapi.repository.ProductRepository;
@@ -20,8 +21,8 @@ public class ProductService {
     }
 
     // Get product by id
-    public Product getProduct(Long id){
-        return productRepository.findById(id).orElse(null);
+    public Optional<Product> getProduct(Long id){
+        return productRepository.findById(id);
     }
 
     // Save/Update product
