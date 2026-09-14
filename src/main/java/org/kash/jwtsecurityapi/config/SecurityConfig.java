@@ -48,7 +48,6 @@ public class SecurityConfig {
                 .anyRequest().authenticated())
             .authenticationProvider(authenticationProvider());
 
-
         return http.build();
     }
 }

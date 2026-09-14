@@ -32,3 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 config/sql/schema-generated.sql
+appdbdev.session.sql
