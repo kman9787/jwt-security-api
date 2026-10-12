@@ -52,52 +52,25 @@ public class JwtService {
     }
 
     // Validate the token
-    public boolean isValidToken(String token, UserDetails userDetails){
-        try{
-            final var userName = extractUserNameFromToken(token);
+    public boolean isValidToken(String token, UserDetails userDetails) throws ExpiredJwtException, 
+            MalformedJwtException, UnsupportedJwtException, SignatureException, IllegalArgumentException, 
+            Exception{
 
-            if(Objects.equals(userName, userDetails.getUsername()))
-                return true;
-
-        } catch(SignatureException se) {
-            log.error("Invalid JWT Sigature: {}", se.getMessage(), se);
-        } catch(MalformedJwtException mje) {
-            log.error("Invalid JWT token: {}", mje.getMessage(), mje);
-        } catch(ExpiredJwtException eje) {
-            log.error("JWT token expired: {}", eje.getMessage(), eje);
-        } catch(UnsupportedJwtException uje) {
-            log.error("JWT token is unsupported: {}", uje.getMessage(), uje);
-        } catch(IllegalArgumentException eae) {
-            log.error("JWT claims is empty: {}", eae.getMessage(), eae);
-        } catch(Exception e) {
-            log.error("JWT geneic exeption: {}", e.getMessage(), e);
-        }
+        final var userName = extractUserNameFromToken(token);
+        if(Objects.equals(userName, userDetails.getUsername()))
+            return true;
        
         return false;
     }
 
     // validate if the token is refresh token
-    public boolean isRefreshToken(String token, UserDetails userDetails){
-        try{
-             var claims = getClaims(token);
-             var tokenType = claims.get("tokenType");
+    public boolean isRefreshToken(String token, UserDetails userDetails) throws 
+            ExpiredJwtException, MalformedJwtException, UnsupportedJwtException, 
+            SignatureException, IllegalArgumentException, Exception{
 
-             if("refresh".equals(tokenType))
-                return true;
-
-        } catch(SignatureException se) {
-            log.error("Invalid JWT Sigature: {}", se.getMessage(), se);
-        } catch(MalformedJwtException mje) {
-            log.error("Invalid JWT token: {}", mje.getMessage(), mje);
-        } catch(ExpiredJwtException eje) {
-            log.error("JWT token expired: {}", eje.getMessage(), eje);
-        } catch(UnsupportedJwtException uje) {
-            log.error("JWT token is unsupported: {}", uje.getMessage(), uje);
-        } catch(IllegalArgumentException eae) {
-            log.error("JWT claims is empty: {}", eae.getMessage(), eae);
-        } catch(Exception e) {
-            log.error("JWT geneic exeption: {}", e.getMessage(), e);
-        }
+        var tokenType = getClaims(token).get("tokenType");
+        if("refresh".equals(tokenType))
+            return true;
 
         return false;
     }

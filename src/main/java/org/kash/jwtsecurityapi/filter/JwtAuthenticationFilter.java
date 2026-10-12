@@ -6,6 +6,7 @@ import java.security.SignatureException;
 import org.kash.jwtsecurityapi.service.JwtService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -51,12 +52,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
             if(userName != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 var userDetails = userDetailsService.loadUserByUsername(userName);
+
                 if(jwtService.isValidToken(jwt, userDetails)){
                     UsernamePasswordAuthenticationToken authToken = 
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+                    securityContext.setAuthentication(authToken);
+                    SecurityContextHolder.setContext(securityContext);
                 }
             }
                
@@ -74,10 +78,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
             log.error("JWT geneic exeption: {}", e.getMessage(), e);
         }
     
-
         filterChain.doFilter(request, response);
     }
-
-
 
 }
