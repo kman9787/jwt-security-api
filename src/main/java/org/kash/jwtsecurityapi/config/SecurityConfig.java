@@ -33,13 +33,6 @@ public class SecurityConfig {
     }
 
     @Bean 
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(detailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
-    }
-
-    @Bean 
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig){
         return authConfig.getAuthenticationManager();
     }
@@ -48,11 +41,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http){
         http.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(request -> request
-                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/auth/usr/**").permitAll()
                 .anyRequest().authenticated())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .authenticationProvider(authenticationProvider());
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

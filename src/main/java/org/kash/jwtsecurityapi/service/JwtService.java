@@ -20,6 +20,7 @@ import java.util.Objects;
 import javax.crypto.SecretKey;
 
 import org.kash.jwtsecurityapi.dto.TokenPair;
+import org.kash.jwtsecurityapi.enums.TokenType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,13 +48,13 @@ public class JwtService {
     // Generate the refresh token
     public String generateRefreshToken(Authentication authentication){
         Map<String, String> claims = new HashMap<>();
-        claims.put("tokenType", "refresh");
+        claims.put("tokenType", TokenType.REFRESH.name());
 
         return generateToken(authentication, refreshExpirationMs, claims);
     }
 
     // Validate the token
-    public boolean isValidToken(String token, UserDetails userDetails) throws ExpiredJwtException, 
+    public boolean isValidTokenForUser(String token, UserDetails userDetails) throws ExpiredJwtException, 
             MalformedJwtException, UnsupportedJwtException, SignatureException, IllegalArgumentException, 
             Exception{
 
@@ -64,21 +65,54 @@ public class JwtService {
         return false;
     }
 
-    // validate if the token is refresh token
-    public boolean isRefreshToken(String token, UserDetails userDetails) throws 
-            ExpiredJwtException, MalformedJwtException, UnsupportedJwtException, 
-            SignatureException, IllegalArgumentException, Exception{
+    public boolean isValidToken(String token) throws ExpiredJwtException, 
+            MalformedJwtException, UnsupportedJwtException, SignatureException, IllegalArgumentException, 
+            Exception{
 
-        var tokenType = getClaims(token).get("tokenType");
-        if("refresh".equals(tokenType))
+        var claims = getClaims(token);
+        if(claims != null)
             return true;
-
+       
         return false;
     }
 
-    public String extractUserNameFromToken(String token) throws Exception, SignatureException, 
+    // validate if the token is refresh token
+    public boolean isRefreshToken(String token) throws 
+            ExpiredJwtException, MalformedJwtException, UnsupportedJwtException, 
+            SignatureException, IllegalArgumentException, Exception{
+
+        var claims = getClaims(token);
+        if(claims == null) return false;
+
+        return TokenType.REFRESH.name().equals(claims.get("tokenType"));
+    }
+
+    public boolean isAccessToken(String token) throws Exception, SignatureException, 
         MalformedJwtException, ExpiredJwtException, UnsupportedJwtException, IllegalArgumentException{
-        return getClaims(token).getSubject();
+
+        var claims = getClaims(token);
+        if(claims == null) return false;
+
+        return TokenType.ACCESS.name().equals(claims.get("tokenType"));
+    }
+
+    public boolean isAccessRefresh(String token) throws Exception, SignatureException, 
+        MalformedJwtException, ExpiredJwtException, UnsupportedJwtException, IllegalArgumentException{
+
+        var claims = getClaims(token);
+        if(claims == null) return false;
+
+        return TokenType.REFRESH.name().equals(claims.get("tokenType"));
+    }
+
+    public String extractUserNameFromToken(String token) throws Exception, SignatureException, 
+            MalformedJwtException, ExpiredJwtException, UnsupportedJwtException, IllegalArgumentException{
+        
+        var claims = getClaims(token);
+        if(claims != null) 
+            return claims.getSubject(); 
+
+        return null;
     }
 
     private Claims getClaims(String token) throws Exception, SignatureException, 
