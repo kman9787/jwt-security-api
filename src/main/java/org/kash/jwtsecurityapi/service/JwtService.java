@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import javax.crypto.SecretKey;
 
+import org.kash.jwtsecurityapi.dto.TokenPair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -90,12 +91,14 @@ public class JwtService {
             .getPayload();
     }
 
-    private String generateToken(Authentication authentication, long expirationMs, Map<String, String> claims){
+    private String generateToken(Authentication authentication, long expirationMs, 
+            Map<String, String> claims){
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
         Date dateNow = new Date(System.currentTimeMillis());
         Date dateExpired = new Date(dateNow.getTime() + expirationMs);
 
         return Jwts.builder()
+            .header().add("type", "JWT").and()
             .subject(userPrincipal.getUsername())
             .claims(claims)
             .issuedAt(dateNow)
@@ -107,5 +110,11 @@ public class JwtService {
     private SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public TokenPair generateTokenPair(Authentication authentication) {
+        var accessToken = generateAccessToken(authentication);
+        var refreshToken = generateRefreshToken(authentication);
+        return new TokenPair(accessToken, refreshToken);
     }
 }

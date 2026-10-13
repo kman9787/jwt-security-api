@@ -64,16 +64,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
                 }
             }
                
-        } catch(SignatureException se) {
-            log.error("Invalid JWT Sigature: {}", se.getMessage(), se);
-        } catch(MalformedJwtException mje) {
-            log.error("Invalid JWT token: {}", mje.getMessage(), mje);
-        } catch(ExpiredJwtException eje) {
-            log.error("JWT token expired: {}", eje.getMessage(), eje);
-        } catch(UnsupportedJwtException uje) {
-            log.error("JWT token is unsupported: {}", uje.getMessage(), uje);
-        } catch(IllegalArgumentException eae) {
-            log.error("JWT claims is empty: {}", eae.getMessage(), eae);
+        } catch(SignatureException e) {
+            log.error("Invalid JWT Sigature: {}", e.getMessage(), e);
+        } catch(MalformedJwtException e) {
+            log.error("Invalid JWT token: {}", e.getMessage(), e);
+        } catch(ExpiredJwtException e) {
+            log.error("JWT token expired: {}", e.getMessage(), e);
+        } catch(UnsupportedJwtException e) {
+            log.error("JWT token is unsupported: {}", e.getMessage(), e);
+        } catch(IllegalArgumentException e) {
+            log.error("JWT claims is empty: {}", e.getMessage(), e);
         } catch(Exception e) {
             log.error("JWT geneic exeption: {}", e.getMessage(), e);
         }
